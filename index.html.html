@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>No es tu trabajo, eres tú... o no.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+:root {
+--color-beige: #F5F1EA;
+--color-blue: #1F2A44;
+--color-cinnamon: #C2A27C;
+--color-grey: #555555;
+--color-border: #E5E1DD;
+}
+
+body {
+background-color: #E2E8F0;
+font-family: 'Inter', sans-serif;
+color: var(--color-blue);
+margin: 0;
+display: grid;
+place-items: center;
+min-height: 100vh;
+padding: 20px 0;
+}
+
+.slide-container {
+width: 1000px;
+height: 850px;
+background-color: var(--color-beige);
+box-shadow: 0 40px 90px rgba(0, 0, 0, 0.2);
+position: relative;
+overflow: hidden;
+display: flex;
+flex-direction: column;
+border-radius: 4px;
+}
+
+.serif { font-family: 'Playfair Display', serif; }
+
+.page-content {
+flex-grow: 1;
+padding: 60px 100px;
+position: relative;
+overflow-y: auto;
+display: none;
+}
+.page-content.active { display: flex; flex-direction: column; }
+
+.main-title { font-size: 3.8rem; line-height: 1.1; font-weight: 700; color: var(--color-blue); letter-spacing: -0.03em; }
+.section-header { font-size: 2.6rem; line-height: 1.2; color: var(--color-blue); margin-bottom: 1rem; position: relative; }
+.block-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.4em; color: var(--color-cinnamon); margin-bottom: 2rem; display: block; font-weight: 600; }
+
+.guide-text {
+color: var(--color-grey);
+font-size: 1.2rem;
+line-height: 1.7;
+margin-bottom: 2.5rem;
+font-weight: 400;
+font-style: italic;
+font-family: 'Playfair Display', serif;
+opacity: 0.95;
+}
+
+.writing-lines {
+background-image: linear-gradient(transparent, transparent 31px, #D1CDC7 31px);
+background-size: 100% 32px;
+line-height: 32px;
+border: none;
+width: 100%;
+outline: none;
+font-family: 'Playfair Display', serif;
+font-size: 1.2rem;
+color: #333;
+resize: none;
+background-attachment: local;
+background-color: transparent;
+}
+
+.story-fragment {
+background: rgba(255, 255, 255, 0.4);
+padding: 2rem;
+border-left: 3px solid var(--color-cinnamon);
+margin: 2rem 0;
+font-family: 'Playfair Display', serif;
+font-style: italic;
+font-size: 1.1rem;
+line-height: 1.8;
+color: var(--color-blue);
+}
+
+.drop-cap::first-letter { font-size: 4rem; float: left; margin-right: 0.8rem; line-height: 1; color: var(--color-cinnamon); font-weight: 700; }
+
+.checklist-item { display: flex; align-items: center; gap: 15px; margin-bottom: 1rem; cursor: pointer; }
+.check-dot { width: 22px; height: 22px; border: 1px solid var(--color-cinnamon); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
+.checklist-item.checked .check-dot { background: var(--color-blue); border-color: var(--color-blue); }
+.checklist-item.checked .check-dot::after { content: '✓'; color: white; font-size: 0.9rem; }
+
+.interactive-table { width: 100%; border-collapse: collapse; margin: 2rem 0; }
+.interactive-table th { text-align: left; font-size: 0.75rem; text-transform: uppercase; color: var(--color-grey); padding-bottom: 1rem; border-bottom: 1px solid var(--color-border); letter-spacing: 0.15em; }
+.interactive-table td { padding: 1.2rem 0; border-bottom: 1px solid var(--color-border); }
+.table-input { width: 100%; border: none; outline: none; font-family: 'Playfair Display', serif; font-style: italic; background: transparent; font-size: 1.1rem; }
+
+.journal-nav { height: 80px; border-top: 1px solid var(--color-border); display: flex; justify-content: space-between; align-items: center; padding: 0 60px; background: #fff; }
+.nav-btn { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.2rem; color: var(--color-grey); cursor: pointer; border: none; background: none; transition: 0.3s; }
+.nav-btn:hover:not(:disabled) { color: var(--color-blue); }
+.nav-btn:disabled { opacity: 0.2; cursor: not-allowed; }
+.page-indicator { font-size: 0.75rem; letter-spacing: 0.3rem; color: var(--color-cinnamon); font-weight: 600; }
+
+.paper-texture { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0.04; z-index: 5;
+background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
+
+.mar-illustration { margin: 4rem 0; display: flex; justify-content: center; }
+
+@media print {
+    body { background: white !important; padding: 0 !important; }
+    .journal-nav { display: none !important; }
+    .slide-container { width: 100% !important; height: auto !important; box-shadow: none !important; border-radius: 0 !important; overflow: visible !important; }
+    .page-content { 
+        display: flex !important; 
+        flex-direction: column !important;
+        page-break-before: always !important; 
+        height: auto !important; 
+        min-height: 100vh;
+        overflow: visible !important;
+        padding: 60px 100px !important;
+    }
+    .page-content:first-of-type { page-break-before: auto !important; }
+    textarea { height: auto !important; overflow: visible !important; min-height: 80px; }
+    .no-print { display: none !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="slide-container">
+<div class="paper-texture"></div>
+<div id="journal-pages" class="flex-grow"></div>
+<footer class="journal-nav no-print">
+<button onclick="changePage(-1)" id="prevBtn" class="nav-btn">← Atrás</button>
+<div class="page-indicator" id="pageInd">01 / 30</div>
+<button onclick="changePage(1)" id="nextBtn" class="nav-btn">Continuar →</button>
+</footer>
+</div>
+
+<script>
+const pagesData = [
+{ type: 'cover', title: "No es tu trabajo,<br>eres tú... <span style='color:var(--color-cinnamon); font-style: italic;'>o no.</span>", subtitle: "Un diario para entender qué hacer con tu vida profesional.", id: "p0" },
+{ type: 'prologue', title: "No caminas sola en este ruido", story: "Mi nombre es Eretria. Hace no mucho, yo era esa mujer que llegaba a casa con un nudo en el estómago, incapaz de sentirse válida en un despacho que, por fuera, era 'perfecto'. Mi corazón se aceleraba cada mañana en el trayecto, no por ambición, sino por un miedo sordo. Me autosaboteaba, convencida de que debía seguir el 'Libro de cómo vivir' que otros habían escrito para mí.<br><br>Si hoy tienes este diario, quiero que sepas algo: ese vacío que sientes no es ingratitud, es tu alma pidiendo aire. Decidí irme de viaje, soltar lo seguro y enfrentarme al silencio. Allí descubrí que no estaba perdida, me estaba encontrando. Este cuaderno es el mapa que yo no tuve, diseñado para que tú también puedas escuchar tu propia voz por encima del ruido laboral.", id: "p1" },
+{ type: 'writing', block: "BLOQUE 1: REALIDAD", title: "¿Qué te hace infeliz?", guide: "Baja al detalle: tareas, personas, entorno. Piensa en lo que realmente te pesa a ti, hoy, sin filtros.", story: "Yo imaginaba que algo ocurría para no tener que ir al despacho. Ese fue mi primer aviso. ¿Cuál es el tuyo?", lines: 8, id: "p2" },
+{ type: 'checklist', block: "BLOQUE 1: REALIDAD", title: "¿Qué estás aguantando?", guide: "No filtres, sé brutal contigo misma. Marca al menos 3 cosas que no quieres tolerar más.", items: ["Las expectativas de los demás sobre mi vida", "La ansiedad que me acelera el pulso al despertar", "La sensación de estar interpretando un papel", "El miedo a decir que no", "Un entorno que no valora mi sensibilidad"], id: "p3" },
+{ type: 'writing', block: "BLOQUE 1: REALIDAD", title: "Si nada cambia en 2 años...", guide: "Descríbelo sin suavizar la tinta. Conecta con esa sensación de urgencia de tu yo del futuro.", lines: 10, id: "p4" },
+{ type: 'table', block: "BLOQUE 1: REALIDAD", title: "Zonas de tolerancia", guide: "Aprende a diferenciar lo que simplemente soportas de lo que te está robando la energía vital.", headers: ["Lo que tolero", "Lo que me hace daño"], rows: 3, id: "p5" },
+{ type: 'writing', block: "BLOQUE 1: REALIDAD", title: "¿Decisión o Inercia?", guide: "Honestidad brutal: ¿Estás donde estás por elección propia o porque te dejaste llevar?", tip: "“El miedo es solo la señal de que algo que vale la pena está a punto de cambiar”", lines: 8, id: "p6" },
+{ type: 'music', title: "Respirar", song: "¿Qué hacemos?", artist: "Nicole Faure", guide: "Deja que las notas limpien el ruido de la realidad que acabas de volcar aquí.", id: "p7" },
+{ type: 'writing', block: "BLOQUE 2: IDENTIDAD", title: "Tu Talento Natural", guide: "¿Qué se te da bien sin esfuerzo? Olvida tu título; piensa en tu valor humano más puro.", lines: 10, id: "p8" },
+{ type: 'checklist', block: "BLOQUE 2: IDENTIDAD", title: "Tus Habilidades Reales", guide: "Marca aquellas capacidades que fluyen en ti de forma orgánica.", items: ["Escucha profunda", "Visión creativa", "Capacidad de calmar", "Curiosidad insaciable", "Liderazgo empático"], id: "p9" },
+{ type: 'writing', block: "BLOQUE 2: IDENTIDAD", title: "Tu Versión Auténtica", guide: "¿Quién eres cuando no estás 'editándote' para encajar en un rol profesional?", lines: 10, id: "p10" },
+{ type: 'map', block: "BLOQUE 2: IDENTIDAD", title: "Mapa de Valores", guide: "Escribe en los nodos lo que es innegociable para tu paz mental.", nodes: 6, id: "p11" },
+{ type: 'writing', block: "BLOQUE 2: IDENTIDAD", title: "La llamada del alma", guide: "Si tuvieras que definir tu propósito en un solo verbo, ¿cuál sería?", lines: 8, id: "p12" },
+{ type: 'music', title: "Habitar", song: "Amar", artist: "Pedro Pastor", guide: "Siente el ritmo. No estás perdida, te estás encontrando.", id: "p13" },
+{ type: 'writing', block: "BLOQUE 3: DIRECCIÓN", title: "Curiosidad sin miedo", guide: "Si el éxito estuviera garantizado, ¿qué probarías la próxima semana?", lines: 10, id: "p14" },
+{ type: 'table', block: "BLOQUE 3: DIRECCIÓN", title: "La Balanza Interna", guide: "Compara el peso de lo conocido (seguridad) frente al potencial de lo nuevo (paz).", headers: ["Opción", "Pros (Paz)", "Contras (Miedo)"], rows: 3, id: "p15" },
+{ type: 'writing', block: "BLOQUE 3: DIRECCIÓN", title: "Caminos Posibles", guide: "Nombra tres rumbos que te despierten una curiosidad genuina ahora mismo.", lines: 12, id: "p16" },
+{ type: 'checklist', block: "BLOQUE 3: DIRECCIÓN", title: "Gamificación del Cambio", guide: "Marca cada opción que te permitas explorar, aunque sea solo un poco.", items: ["Investigación online", "Hablar con alguien del sector", "Prueba de campo", "Curso introductorio"], id: "p17" },
+{ type: 'writing', block: "BLOQUE 3: DIRECCIÓN", title: "Tu primera parada", guide: "No pienses en el final del camino, solo en el siguiente paso lógico.", lines: 8, id: "p18" },
+{ type: 'music', title: "Celebrar la búsqueda", song: "1:11", artist: "Caribefunk", guide: "Deja que el alma baile. Hoy has hecho suficiente con solo mirar hacia adentro.", id: "p19" },
+{ type: 'plan', block: "BLOQUE 4: ACCIÓN", title: "Plan de 30 Días", guide: "Divide tu avance en semanas concretas. Convirtamos ideas en hechos.", weeks: ["Semana 1: Explorar", "Semana 2: Probar", "Semana 3: Ajustar", "Semana 4: Decidir"], id: "p20" },
+{ type: 'writing', block: "BLOQUE 4: ACCIÓN", title: "Los próximos 7 días", guide: "¿Qué acción pequeña y valiente vas a ejecutar antes de que termine la semana?", lines: 10, id: "p21" },
+{ type: 'writing', block: "BLOQUE 4: ACCIÓN", title: "Tu Promesa Sagrada", guide: "Escribe el compromiso que firmas hoy contigo misma para no volver a dormirte.", lines: 12, id: "p22" },
+{ type: 'writing', block: "BLOQUE 4: ACCIÓN", title: "Un nuevo verbo", guide: "Cuando alguien te pregunte 'quién eres', ¿cuál será tu nueva respuesta?", lines: 10, id: "p23" },
+{ type: 'writing', block: "BLOQUE 5: EL CIERRE", title: "Gente que me expande", guide: "Rodéate de gente que te motive a tomar decisiones y que crea en ti.", story: "Identifica a esas personas que te impulsan a ser valiente.", lines: 10, id: "p24" },
+{ type: 'writing', block: "BLOQUE 5: EL CIERRE", title: "Mi Universo Interior", guide: "Describe lo maravilloso que has descubierto en ti durante este diario.", lines: 12, id: "p25" },
+{ type: 'writing', block: "BLOQUE 5: EL CIERRE", title: "La voz de Isabel", guide: "¿A dónde quieres que llegue tu alma a partir de ahora?", tip: "“Muévete para que tu alma llegue a todo el mundo”", lines: 10, id: "p26" },
+{ type: 'writing', block: "BLOQUE 5: EL CIERRE", title: "Últimas reflexiones", guide: "Escribe aquí lo que te llevas de este viaje hacia tu coherencia.", lines: 12, id: "p27" },
+{ type: 'final_motivation', block: "EL CIERRE", title: "Eres valiente por actuar", text: "Mirar hacia adentro y decidir que mereces una vida coherente requiere una valentía que no todo el mundo posee. Si has llegado hasta aquí, ya has dado el paso más difícil: dejar de ignorar lo que tu alma te grita.<br><br>Quiero que sepas que somos muchas las mujeres que, como tú y como yo, estamos rediseñando nuestras vidas. No caminas sola. Tu nueva historia no empieza mañana, ha empezado hoy al cerrar este diario. Actúa.", guide: "Este es el final de este cuaderno, pero el comienzo de tu propia historia de libertad.", id: "p28" },
+{ type: 'dedicatory', block: "MENSAJE FINAL", title: "Para ti, viajera", text: "Querida amiga, eres valiente. Aún nos queda mucha vida por sentir en nuestro interior pero lo más importante es que te rodees de gente que te motive a tomar decisiones y que creas en ti. Tienes un universo dentro de ti y vas a ser capaz de viajar por todo él descubriendo todo lo maravilloso que alberga.<br><br>Como me dijo Isabel, dueña de un albergue durante uno de los viajes que cambió mi vida: <br><br><b>“Muévete para que tu alma llegue a todo el mundo”.</b>", id: "p29" }
+];
+
+let currentPage = 0;
+
+function renderJournal() {
+    const container = document.getElementById('journal-pages');
+    container.innerHTML = '';
+
+    pagesData.forEach((page, index) => {
+        const div = document.createElement('div');
+        div.className = `page-content ${index === currentPage ? 'active' : ''}`;
+        div.id = `page-${index}`;
+
+        let html = page.block ? `<span class="block-label">${page.block}</span>` : '';
+
+        if (page.type === 'cover') {
+            html += `<div class="h-full flex flex-col justify-center items-center text-center"><h1 class="main-title serif">${page.title}</h1><p class="text-2xl serif italic text-[#C2A27C] mt-6">${page.subtitle}</p><input type="text" id="name-${page.id}" placeholder="Escribe tu nombre aquí..." class="mt-8 text-center bg-transparent border-b border-cinnamon p-2 serif italic text-xl outline-none no-print" oninput="saveData(this.id, this.value)"><div class="mar-illustration"><svg width="240" height="100" viewBox="0 0 200 80" fill="none"><path d="M75 45C75 31.19 86.19 20 100 20C113.8 20 125 31.19 125 45" stroke="#C2A27C" stroke-width="0.8" /><path d="M10 50C30 48 50 52 70 50C90 48 110 52 130 50C150 48 170 52 190 50" stroke="#1F2A44" stroke-width="1" /><path d="M30 60C50 58 70 62 90 60C110 58 130 62 150 60C170 58 190 62 210 60" stroke="#1F2A44" stroke-width="0.6" opacity="0.4" /></svg></div></div>`;
+        } else if (page.type === 'prologue') {
+            html += `<h2 class="section-header serif">${page.title}</h2><div class="story-fragment drop-cap !bg-transparent !border-none !p-0 mt-8 text-justify">${page.story}</div>`;
+        } else if (page.type === 'music') {
+            html += `<div class="music-layout"><span class="block-label">Pausa Rítmica</span><h2 class="serif text-5xl mb-8">${page.title}</h2><p class="serif italic text-3xl text-blue-900 mb-2">${page.song}</p><p class="text-[0.7rem] uppercase tracking-widest text-slate-400">${page.artist || 'Artista'}</p><p class="guide-text mt-12 text-center max-w-lg mx-auto">${page.guide}</p></div>`;
+        } else if (page.type === 'writing') {
+            html += `<h2 class="section-header serif">${page.title}</h2><p class="guide-text">${page.guide || ''}</p>${page.story ? `<div class="story-fragment">“${page.story}”</div>` : ''}<textarea id="text-${page.id}" class="writing-lines" style="height:${(page.lines || 8) * 32}px" oninput="saveData(this.id, this.value)"></textarea>${page.tip ? `<div class="story-fragment !bg-white/50 border-cinnamon text-center mt-12">“${page.tip}”</div>` : ''}`;
+        } else if (page.type === 'checklist') {
+            html += `<h2 class="section-header serif">${page.title}</h2><p class="guide-text">${page.guide}</p><div class="space-y-4 my-10">${(page.items || []).map((item, i) => `<div id="check-${page.id}-${i}" class="checklist-item" onclick="toggleCheck(this)"><div class="check-dot"></div><span class="serif italic text-xl">${item}</span></div>`).join('')}</div>`;
+        } else if (page.type === 'table') {
+            html += `<h2 class="section-header serif">${page.title}</h2><p class="guide-text">${page.guide}</p><table class="interactive-table"><thead><tr>${(page.headers || []).map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>${Array(page.rows || 3).fill(0).map((_, r) => `<tr>${(page.headers || []).map((_, c) => `<td><input type="text" id="table-${page.id}-${r}-${c}" class="table-input" placeholder="..." oninput="saveData(this.id, this.value)"></td>`).join('')}</tr>`).join('')}</tbody></table>`;
+        } else if (page.type === 'map') {
+            html += `<h2 class="section-header serif">${page.title}</h2><p class="guide-text">${page.guide}</p><div class="grid grid-cols-3 gap-6 mt-12">${Array(page.nodes || 6).fill(0).map((_, i) => `<div id="node-${page.id}-${i}" class="border border-slate-200 p-10 text-center italic serif text-slate-400 min-h-[120px] flex items-center justify-center cursor-text" contenteditable="true" oninput="saveData(this.id, this.innerText)">Esencia</div>`).join('')}</div>`;
+        } else if (page.type === 'plan') {
+            html += `<h2 class="section-header serif">${page.title}</h2><p class="guide-text">${page.guide}</p><div class="grid grid-cols-2 gap-4 mt-4">${(page.weeks || []).map((w, i) => `<div class="p-4 border border-slate-100 bg-white/60"><h4 class="serif italic text-md text-[#C2A27C] mb-2">${w}</h4><textarea id="plan-${page.id}-${i}" class="w-full h-24 bg-transparent outline-none text-sm leading-relaxed" placeholder="Objetivos..." oninput="saveData(this.id, this.value)"></textarea></div>`).join('')}</div>`;
+        } else if (page.type === 'final_motivation' || page.type === 'dedicatory') {
+            html += `<div class="h-full flex flex-col justify-center items-center text-center"><h2 class="section-header serif text-4xl mb-12">${page.title}</h2><div class="story-fragment !bg-white/40 !border-cinnamon text-2xl italic max-w-2xl p-12">${page.text}</div>${page.type === 'dedicatory' ? '<button onclick="window.print()" class="mt-16 bg-blue-900 text-white px-12 py-5 uppercase tracking-widest rounded shadow no-print">Sellar mi viaje (PDF)</button>' : ''}</div>`;
+        }
+
+        div.innerHTML = html;
+        container.appendChild(div);
+        loadSavedDataForPage(div);
+    });
+
+    document.getElementById('pageInd').innerText = `${String(currentPage + 1).padStart(2, '0')} / 30`;
+    document.getElementById('prevBtn').disabled = currentPage === 0;
+    document.getElementById('nextBtn').innerText = currentPage === pagesData.length - 1 ? "FIN" : "Continuar →";
+}
+
+function saveData(id, value) {
+    localStorage.setItem(id, value);
+}
+
+function toggleCheck(el) {
+    el.classList.toggle('checked');
+    saveData(el.id, el.classList.contains('checked'));
+}
+
+function loadSavedDataForPage(container) {
+    const inputs = container.querySelectorAll('input, textarea');
+    inputs.forEach(input => {
+        const saved = localStorage.getItem(input.id);
+        if (saved !== null) input.value = saved;
+    });
+    
+    const editables = container.querySelectorAll('[contenteditable="true"]');
+    editables.forEach(ed => {
+        const saved = localStorage.getItem(ed.id);
+        if (saved !== null) ed.innerText = saved;
+    });
+
+    const checks = container.querySelectorAll('.checklist-item');
+    checks.forEach(check => {
+        const saved = localStorage.getItem(check.id);
+        if (saved === 'true') check.classList.add('checked');
+    });
+}
+
+function changePage(dir) {
+    const next = currentPage + dir;
+    if (next >= 0 && next < pagesData.length) {
+        currentPage = next;
+        renderJournal();
+        document.querySelector('.page-content.active')?.scrollTo(0,0);
+    }
+}
+
+window.onload = renderJournal;
+</script>
+</body>
+</html>
